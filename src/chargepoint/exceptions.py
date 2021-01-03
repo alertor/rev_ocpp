@@ -1,0 +1,3 @@
+
+class ChargePointNotAuthorized(Exception):
+    pass
