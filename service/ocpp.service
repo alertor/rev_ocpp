@@ -1,0 +1,14 @@
+[Unit]
+Description=Gunicorn (Rev OCPP)
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=www
+Group=www
+RuntimeDirectory=gunicorn
+ExecStart=/usr/local/bin/agv_gunicorn.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
