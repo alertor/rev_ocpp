@@ -6,7 +6,7 @@ After=network.target
 [Service]
 User=www-data
 Group=www-data
-Environment=/etc/environment
+EnvironmentFile=/etc/environment
 RuntimeDirectory=gunicorn
 ExecStart=/usr/local/bin/central_system.sh
 Restart=always
