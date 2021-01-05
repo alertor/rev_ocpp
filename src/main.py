@@ -15,5 +15,5 @@ app.include_router(
 # Data access endpoint
 app.include_router(
     data_api_router,
-    prefix='/data'
+    prefix='/api'
 )
