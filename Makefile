@@ -15,8 +15,8 @@ uninstall:
 
 install:
 	@echo Installing AGV Database service...
-	sudo cp scripts/gunicorn.* /etc/systemd/system/
-	sudo cp scripts/central_system.sh /usr/local/bin/
+	sudo cp service/gunicorn.* /etc/systemd/system/
+	sudo cp service/central_system.sh /usr/local/bin/
 	sudo systemctl daemon-reload
 	sudo systemctl enable gunicorn
 	sudo systemctl enable gunicorn.socket
