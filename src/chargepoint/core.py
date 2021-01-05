@@ -89,7 +89,7 @@ class CoreProfile(BaseChargePoint):
         )
 
         try:
-            auth_req.token = self._session.query(Token).filter(Token.token == id_tag).one()
+            auth_req.token = self._session.query(Token).filter(Token.token == id_tag.lower()).one()
             authorized = AuthorizationStatus.accepted
         except (MultipleResultsFound, NoResultFound):
             pass
