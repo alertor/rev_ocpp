@@ -4,10 +4,10 @@ Requires=gunicorn.socket
 After=network.target
 
 [Service]
-User=www
-Group=www
+User=www-data
+Group=www-data
 RuntimeDirectory=gunicorn
-ExecStart=/usr/local/bin/agv_gunicorn.sh
+ExecStart=/usr/local/bin/central_system.sh
 Restart=always
 
 [Install]
