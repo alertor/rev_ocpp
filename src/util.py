@@ -11,7 +11,6 @@ def utc_datetime() -> datetime:
 
 def parse_iso_parameter(iso: Optional[str]) -> Optional[datetime]:
     # If None is passed in, return None
-    print(iso)
     if iso is None:
         return None
     # If anything else is passed in, attempt to convert to datetime

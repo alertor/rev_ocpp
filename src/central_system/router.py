@@ -18,7 +18,6 @@ async def _handle_request(websocket: FastAPIWebSocketAdaptor, path):
     """
     # Extract the ID from the request path
     charge_point_id = path.strip('/')
-    print(path)
 
     with session() as s:
         try:
@@ -32,7 +31,6 @@ async def _handle_request(websocket: FastAPIWebSocketAdaptor, path):
 
 @router.websocket("/{point_id}")
 async def connect_chargepoint(websocket: WebSocket, point_id: str) -> None:
-    print(point_id)
     await websocket.accept(subprotocol='ocpp1.6')
     _websocket_adaptor = FastAPIWebSocketAdaptor(websocket)
     await _handle_request(_websocket_adaptor, point_id)
