@@ -10,10 +10,8 @@ import settings
 # Initialise DB connection
 client = pymongo.MongoClient(
     settings.MONGO_ADDR,
-    # username=os.environ.get('MONGO_USER'),
-    # password=os.environ.get('MONGO_PAASSWORD'),
-    username='user',
-    password='password',
+    username=settings.MONGO_USER,
+    password=settings.MONGO_PASS,
     serverSelectionTimeoutMS=1000
 )
 
