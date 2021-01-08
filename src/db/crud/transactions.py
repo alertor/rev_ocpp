@@ -9,18 +9,24 @@ from .. import models, schemas
 def get_transactions_by_datetime(
         db: Session,
         start_timestamp: Optional[datetime] = None,
-        end_timestamp: Optional[datetime] = None) -> List[schemas.Transaction]:
-    if start_timestamp and end_timestamp:
-        return db.query(models.Transaction).filter(
-            models.Transaction.start_timestamp.between(start_timestamp, end_timestamp)
-        ).all()
-    elif start_timestamp:
-        return db.query(models.Transaction).filter(
+        end_timestamp: Optional[datetime] = None,
+        meter_over: Optional[int] = None) -> List[schemas.Transaction]:
+
+    query = db.query(models.Transaction)
+
+    # Apply time filters
+    if start_timestamp:
+        query = query.filter(
             models.Transaction.start_timestamp > start_timestamp
-        ).all()
-    elif end_timestamp:
-        return db.query(models.Transaction).filter(
-            models.Transaction.start_timestamp < end_timestamp
-        ).all()
-    else:
-        return db.query(models.Transaction).all()
+        )
+    if end_timestamp:
+        query = query.filter(
+            models.Transaction.end_timestamp < end_timestamp
+        )
+    # Apply meter filters
+    if meter_over:
+        query = query.filter(
+            models.Transaction.meter_used > meter_over
+        )
+
+    return query.all()

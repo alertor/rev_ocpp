@@ -2,7 +2,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from db.base_class import Base
-from .user import vehicle_users
+from ..user import vehicle_users
 
 
 class Vehicle(Base):

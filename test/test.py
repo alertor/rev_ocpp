@@ -16,9 +16,9 @@ class ChargePoint(cp):
     async def execute(self):
 
         await self.send_boot_notification()
-        # id = await self.send_start_transaction()
-        # time.sleep(5)
-        # await self.send_stop_transaction(id)
+        id = await self.send_start_transaction()
+        time.sleep(3)
+        await self.send_stop_transaction(id)
 
     async def send_boot_notification(self):
         request = call.BootNotificationPayload(
