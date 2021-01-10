@@ -1,4 +1,5 @@
-from fastapi import APIRouter, WebSocket
+from fastapi import APIRouter, WebSocket, Query
+from fastapi.responses import RedirectResponse
 from fastapi.websockets import WebSocketDisconnect
 
 from db.session import session
@@ -30,8 +31,11 @@ async def _handle_request(websocket: FastAPIWebSocketAdaptor, path):
 
 
 @router.websocket("/{point_id}")
-async def connect_chargepoint(websocket: WebSocket, point_id: str) -> None:
+async def connect_chargepoint(websocket: WebSocket, point_id) -> None:
+    # await websocket.close(code=1008)
+    # return
     await websocket.accept(subprotocol='ocpp1.6')
+    if websocket.headers['Sec-WebSocket-Protocol'] != 'ocpp1.6':
+        await websocket.close()
     _websocket_adaptor = FastAPIWebSocketAdaptor(websocket)
     await _handle_request(_websocket_adaptor, point_id)
-

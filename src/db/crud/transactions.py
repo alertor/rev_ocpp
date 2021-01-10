@@ -6,23 +6,24 @@ from sqlalchemy.orm import Session
 from .. import models, schemas
 
 
-def get_transactions_by_datetime(
+def get_transactions(
         db: Session,
-        start_timestamp: Optional[datetime] = None,
-        end_timestamp: Optional[datetime] = None,
+        from_timestamp: Optional[datetime] = None,
+        to_timestamp: Optional[datetime] = None,
         meter_over: Optional[int] = None) -> List[schemas.Transaction]:
 
     query = db.query(models.Transaction)
 
     # Apply time filters
-    if start_timestamp:
+    if from_timestamp:
         query = query.filter(
-            models.Transaction.start_timestamp > start_timestamp
+            models.Transaction.start_timestamp > from_timestamp
         )
-    if end_timestamp:
+    if to_timestamp:
         query = query.filter(
-            models.Transaction.end_timestamp < end_timestamp
+            models.Transaction.end_timestamp < to_timestamp
         )
+
     # Apply meter filters
     if meter_over:
         query = query.filter(

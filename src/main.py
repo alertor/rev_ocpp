@@ -9,7 +9,7 @@ api = FastAPI()
 ocpp = FastAPI()
 
 
-api.add_middleware(APITokenMiddleware)
+# api.add_middleware(APITokenMiddleware)
 
 
 # Data access endpoint

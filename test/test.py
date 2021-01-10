@@ -16,6 +16,7 @@ class ChargePoint(cp):
     async def execute(self):
 
         await self.send_boot_notification()
+        await self.send_auth()
         id = await self.send_start_transaction()
         time.sleep(3)
         await self.send_stop_transaction(id)
@@ -31,7 +32,7 @@ class ChargePoint(cp):
             print("Connected to central system.")
 
     async def send_auth(self):
-        request = call.AuthorizePayload(id_tag='ABC123')
+        request = call.AuthorizePayload(id_tag='150C8596')
         response = await self.call(request)
 
         print(response)
@@ -39,7 +40,7 @@ class ChargePoint(cp):
     async def send_start_transaction(self) -> int:
         request = call.StartTransactionPayload(
             connector_id=1,
-            id_tag='ABC123',
+            id_tag='150C8596',
             meter_start=0,
             timestamp=utc_datetime().isoformat()
         )
@@ -53,7 +54,7 @@ class ChargePoint(cp):
             meter_stop=123,
             timestamp=utc_datetime().isoformat(),
             transaction_id=id,
-            id_tag='ABC123'
+            id_tag='150C8596'
         )
 
         response = await self.call(request)
