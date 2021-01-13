@@ -1,4 +1,4 @@
-MONGO_ADDR = 'mongodb://127.0.0.1/'
+MONGO_ADDR = 'mongodb://127.0.0.1:27018/'
 MONGO_USER = 'user'
 MONGO_PASS = 'password'
 

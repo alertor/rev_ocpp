@@ -31,6 +31,14 @@ def _modify_id(data: List[Dict]) -> List:
     return data
 
 
+def log_connect(point_id: str) -> None:
+    col = db['connections']
+    col.insert_one({
+        'chargepoint_id': point_id,
+        'timestamp': utc_datetime()
+    })
+
+
 def log_message(message, path: Optional[str] = None):
     col = db[path if path else 'ocpp_msgs']
     col.insert_one({
@@ -39,15 +47,12 @@ def log_message(message, path: Optional[str] = None):
     })
 
 
-def get_log(
-        path: str,
-        action: Optional[Action] = None,
+def get_connection_log(
         from_timestamp: Optional[datetime] = None,
-        to_timestamp: Optional[datetime] = None) -> Optional[List[Dict]]:
-    col = db[path]
+        to_timestamp: Optional[datetime] = None
+) -> List[Dict]:
+    col = db['connections']
     query = {}
-    if action:
-        query['action'] = action.value
     if from_timestamp:
         query['timestamp'] = {
             '$gte': from_timestamp
@@ -57,7 +62,30 @@ def get_log(
             **query['timestamp'],
             '$lte': to_timestamp
         }
-    return _modify_id(list(col.find(query)))
+    return list(col.find(query, {'_id': 0}))
 
 
-__all__ = ['get_log', 'log_message']
+def get_message_log(
+        path: str,
+        actions: Optional[List[Action]] = None,
+        from_timestamp: Optional[datetime] = None,
+        to_timestamp: Optional[datetime] = None) -> List[Dict]:
+    col = db[path]
+    query = {}
+    if actions:
+        query['action'] = {
+            '$in': [action.value for action in actions]
+        }
+    if from_timestamp:
+        query['timestamp'] = {
+            '$gte': from_timestamp
+        }
+    if to_timestamp:
+        query['timestamp'] = {
+            **query['timestamp'],
+            '$lte': to_timestamp
+        }
+    return list(col.find(query, {'_id': 0}))
+
+
+__all__ = ['get_connection_log', 'get_message_log', 'log_connect', 'log_message']

@@ -17,9 +17,9 @@ class ChargePoint(cp):
 
         await self.send_boot_notification()
         await self.send_auth()
-        id = await self.send_start_transaction()
-        time.sleep(3)
-        await self.send_stop_transaction(id)
+        # id = await self.send_start_transaction()
+        # time.sleep(3)
+        # await self.send_stop_transaction(id)
 
     async def send_boot_notification(self):
         request = call.BootNotificationPayload(
@@ -63,7 +63,7 @@ class ChargePoint(cp):
 
 async def main():
     async with websockets.connect(
-        'ws://localhost:8000/ocpp/1_6/veefil-12465',
+        'ws://localhost:8000/ocpp/1_6/veefil-1242365',
         subprotocols=['ocpp1.6']
     ) as ws:
 

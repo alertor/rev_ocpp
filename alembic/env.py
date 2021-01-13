@@ -18,13 +18,15 @@ fileConfig(config.config_file_name)
 from db.base_class import Base
 from db.models import *
 
+import settings
+
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 config.set_main_option(
     "sqlalchemy.url",
-    f"postgresql://{os.environ['PG_USER']}:{os.environ['PG_PASS']}@{os.environ['PG_ADDR']}/{os.environ['PG_DB']}"
+    f"postgresql://{settings.PG_USER}:{settings.PG_PASS}@{settings.PG_ADDR}/{settings.PG_DB}"
 )
 
 
