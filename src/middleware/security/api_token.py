@@ -13,7 +13,6 @@ class APITokenMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next) -> Response:
         try:
             key = await self.X_API_KEY(request)
-            print(key)
         except HTTPException:
             return Response(status_code=403)
 

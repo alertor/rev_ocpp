@@ -1,5 +1,4 @@
 from dateutil import parser
-from json import dumps
 from typing import Dict, List, Optional
 
 from ocpp.routing import on
@@ -38,8 +37,7 @@ from .types import MeterValue
 
 class CoreProfile(BaseChargePoint):
     """
-    Abstract class implementing the Core Profile of the OCPP1.6 spec. Requires the concrete class to implement all
-    request handlers.
+    Base class implementing the Core Profile of the OCPP1.6 spec
     """
 
     def __init__(
@@ -70,7 +68,7 @@ class CoreProfile(BaseChargePoint):
 
     def _get_token(self, id_tag) -> Optional[Token]:
         try:
-            return self._session.query(Token).filter(Token.token == id_tag).one()
+            return self._session.query(Token).filter(Token.token == id_tag.lower()).one()
         except (MultipleResultsFound, NoResultFound):
             return None
 
@@ -80,27 +78,20 @@ class CoreProfile(BaseChargePoint):
     # Incoming requests
     @on(Action.Authorize)
     async def _on_authorize(self, id_tag: str, **kwargs) -> call_result.AuthorizePayload:
-        # Generate auth request without known token id - will be determined by the db query
-        authorized = AuthorizationStatus.blocked
+        token = self._get_token(id_tag)
+        # Log all authorization requests
         auth_req = AuthorizationRequest(
             token_string=id_tag,
             chargepoint=self._data_object,
             timestamp=utc_datetime()
         )
-
-        try:
-            auth_req.token = self._session.query(Token).filter(Token.token == id_tag.lower()).one()
-            authorized = AuthorizationStatus.accepted
-        except (MultipleResultsFound, NoResultFound):
-            pass
-
         self._session.add(auth_req)
         self._session.commit()
 
         # TODO: Add parent tag if exists
         return call_result.AuthorizePayload(
             id_tag_info={
-                'status': authorized
+                'status': AuthorizationStatus.accepted if token else AuthorizationStatus.blocked
             }
         )
 
@@ -154,6 +145,14 @@ class CoreProfile(BaseChargePoint):
             **kwargs) -> call_result.StartTransactionPayload:
         # Get data objects
         token = self._get_token(id_tag)
+        if not token:
+            return call_result.StartTransactionPayload(
+                transaction_id=0,
+                id_tag_info={
+                    'status': AuthorizationStatus.blocked
+                }
+            )
+
         connector = next(c for c in self._data_object.connectors if c.id == connector_id)
 
         # Set up the in progress transaction
