@@ -16,7 +16,7 @@ class ChargePoint(cp):
     async def execute(self):
 
         await self.send_boot_notification()
-        await self.send_auth()
+        # await self.send_auth()
         # id = await self.send_start_transaction()
         # time.sleep(3)
         # await self.send_stop_transaction(id)
@@ -63,7 +63,7 @@ class ChargePoint(cp):
 
 async def main():
     async with websockets.connect(
-        'ws://localhost:8000/ocpp/1_6/veefil-1242365',
+        'wss://ocpp16.therevproject.com/ocpp/1_6/plswork',
         subprotocols=['ocpp1.6']
     ) as ws:
 
