@@ -107,7 +107,7 @@ class CoreProfile(BaseChargePoint):
 
         return call_result.BootNotificationPayload(
             current_time=utc_datetime().isoformat(),
-            interval=5,
+            interval=60,
             status=RegistrationStatus.accepted
         )
 

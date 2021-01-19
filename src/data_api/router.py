@@ -29,7 +29,7 @@ async def get_transaction_items(
     return get_transactions(db, from_timestamp=_from, to_timestamp=_to, meter_over=over)
 
 
-@router.get('/logs/connections}', response_model=List[Dict])
+@router.get('/logs/connections', response_model=List[Dict])
 async def get_connection_log_items(
         from_time: Optional[str] = Query(None, alias='from'),
         to_time: Optional[str] = Query(None, alias='to'),
