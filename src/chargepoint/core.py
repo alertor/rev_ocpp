@@ -129,8 +129,8 @@ class CoreProfile(BaseChargePoint):
     async def _on_meter_values(
             self,
             connector_id: int,
-            transaction_id: int,
             meter_value: List[MeterValue],
+            transaction_id: Optional[int] = None,
             **kwargs) -> call_result.MeterValuesPayload:
         return call_result.MeterValuesPayload()
 
@@ -190,8 +190,8 @@ class CoreProfile(BaseChargePoint):
         # Generate the database object
         err = ChargePointError(
             connector=connector,
-            error_code=error_code.value,
-            status=status.value,
+            error_code=error_code,
+            status=status,
             timestamp=timestamp if timestamp else utc_datetime(),
             info=info,
             vendor_id=vendor_id,
