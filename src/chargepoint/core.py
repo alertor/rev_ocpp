@@ -31,6 +31,7 @@ from db.models import (
 
 from network.websocket_adaptor import FastAPIWebSocketAdaptor
 
+from .enums import UsageMode
 from .exceptions import ChargePointNotAuthorized
 from .types import MeterValue
 
@@ -51,6 +52,9 @@ class CoreProfile(BaseChargePoint):
         self._in_progress_transactions = Dict[int, InProgressTransaction]
 
         self._data_object = self._authenticate_charge_point(charge_point_id)
+
+        # Config Params
+        self._useage_mode = UsageMode.FREE
 
     async def _handle_call(self, msg):
         await super(CoreProfile, self)._handle_call(msg)
@@ -143,9 +147,9 @@ class CoreProfile(BaseChargePoint):
             timestamp: str,
             reservation_id: int = None,
             **kwargs) -> call_result.StartTransactionPayload:
-        # Get data objects
+        # Check authorization on charge
         token = self._get_token(id_tag)
-        if not token:
+        if not token and not self._useage_mode == UsageMode.FREE:
             return call_result.StartTransactionPayload(
                 transaction_id=0,
                 id_tag_info={
@@ -153,7 +157,8 @@ class CoreProfile(BaseChargePoint):
                 }
             )
 
-        connector = next(c for c in self._data_object.connectors if c.id == connector_id)
+        # Get connector the charger is using
+        connector = self._get_connector(connector_id)
 
         # Set up the in progress transaction
         transaction = InProgressTransaction(

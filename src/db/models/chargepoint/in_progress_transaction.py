@@ -10,7 +10,7 @@ class InProgressTransaction(Base):
     meter_start = Column(Integer, nullable=False)
     reservation_id = Column(Integer)
     connector_id = Column(ForeignKey('connector.id'), nullable=False, index=True)
-    start_token_id = Column(ForeignKey('token.id'), nullable=False, index=True)
+    start_token_id = Column(ForeignKey('token.id'), nullable=True, index=True)
 
     connector = relationship('Connector')
     start_token = relationship('Token')
