@@ -207,12 +207,6 @@ class CoreProfile(BaseChargePoint):
         # self._session.add(err)
         # self._session.commit()
 
-        request = call.GetConfigurationPayload(
-            key=['HU1.CCURFIDDisable']
-        )
-        response = await self.call(request)
-        print(response)
-        
         return call_result.StatusNotificationPayload()
 
     @on(Action.StopTransaction)
