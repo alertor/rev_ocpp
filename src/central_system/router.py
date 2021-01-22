@@ -1,3 +1,5 @@
+import asyncio
+
 from fastapi import APIRouter
 from fastapi.exceptions import HTTPException
 
@@ -22,10 +24,13 @@ async def get_point_free(point_id: str):
         cp = central_system.get_chargepoint(point_id)
         request = call.GetConfigurationPayload(
             key=['HU1.CCURFIDDisable']
-        )   
-        response = await cp.call(request)
+        )
+        response = asyncio.wait_for(cp.call(request), 10.0)
         print(response)
         return response
     except KeyError:
         print(f'No chargepoint with id {point_id}')
+        return HTTPException(status_code=404)
+    except asyncio.TimeoutError:
+        print('Timed out')
         return HTTPException(status_code=404)
