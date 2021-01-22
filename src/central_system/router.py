@@ -25,7 +25,7 @@ async def get_point_free(point_id: str):
         request = call.GetConfigurationPayload(
             key=['HU1.CCURFIDDisable']
         )
-        response = asyncio.wait_for(cp.call(request), 10.0)
+        response = await asyncio.wait_for(cp.call(request), 10.0)
         print(response)
         return response
     except KeyError:
