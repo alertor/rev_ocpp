@@ -203,9 +203,16 @@ class CoreProfile(BaseChargePoint):
             vendor_error_code=vendor_error_code
         )
 
-        self._session.add(err)
-        self._session.commit()
+        # TODO: Prevent logging non error status messages
+        # self._session.add(err)
+        # self._session.commit()
 
+        request = call.GetConfigurationPayload(
+            key=['HU1.CCURFIDDisable']
+        )
+        response = await self.call(request)
+        print(response)
+        
         return call_result.StatusNotificationPayload()
 
     @on(Action.StopTransaction)
