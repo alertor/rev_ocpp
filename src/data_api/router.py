@@ -33,12 +33,17 @@ async def get_usage_items(
         chargepoint: Optional[str] = None,
         from_time: Optional[str] = Query(None, alias='from'),
         to_time: Optional[str] = Query(None, alias='to'),
-        named: Optional[bool] = False
+        named: Optional[bool] = False,
+        header: Optional[bool] = False
 ):
     _from = parse_iso_parameter(from_time)
     _to = parse_iso_parameter(to_time)
     result = get_usage(db, chargepoint=chargepoint, from_timestamp=_from, to_timestamp=_to)
-    return [r._asdict() for r in result] if named else result
+    if header:
+        return [['Date', 'Count', 'kWh']] + result
+    elif named:
+        return [r._asdict() for r in result] if named else result
+    return result
 
 
 @router.get('/usage/kwh', response_model=List)
@@ -47,12 +52,17 @@ async def get_usage_kwh_items(
         chargepoint: Optional[str] = None,
         from_time: Optional[str] = Query(None, alias='from'),
         to_time: Optional[str] = Query(None, alias='to'),
-        named: Optional[bool] = False
+        named: Optional[bool] = False,
+        header: Optional[bool] = False
 ):
     _from = parse_iso_parameter(from_time)
     _to = parse_iso_parameter(to_time)
     result = get_usage(db, kwh=True, count=False, chargepoint=chargepoint, from_timestamp=_from, to_timestamp=_to)
-    return [r._asdict() for r in result] if named else result
+    if header:
+        return [['Date', 'kWh']] + result
+    elif named:
+        return [r._asdict() for r in result] if named else result
+    return result
 
 
 @router.get('/usage/count', response_model=List)
@@ -61,9 +71,14 @@ async def get_usage_count_items(
         chargepoint: Optional[str] = None,
         from_time: Optional[str] = Query(None, alias='from'),
         to_time: Optional[str] = Query(None, alias='to'),
-        named: Optional[bool] = False
+        named: Optional[bool] = False,
+        header: Optional[bool] = False
 ):
     _from = parse_iso_parameter(from_time)
     _to = parse_iso_parameter(to_time)
     result = get_usage(db, kwh=False, count=True, chargepoint=chargepoint, from_timestamp=_from, to_timestamp=_to)
-    return [r._asdict() for r in result] if named else result
+    if header:
+        return [['Date', 'Count']] + result
+    elif named:
+        return [r._asdict() for r in result] if named else result
+    return result
