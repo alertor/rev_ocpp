@@ -18,6 +18,7 @@ async def list_connected_points():
 
 
 # Config API
+# TODO - this is a test function to try access Veefil station, should be made more generic
 @router.get("/{point_id}/mode")
 async def get_point_free(point_id: str):
     try:
