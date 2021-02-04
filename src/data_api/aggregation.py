@@ -66,7 +66,7 @@ def get_usage(
     if count:
         values.append(func.coalesce(data.c.count, 0).label('count'))
     if kwh:
-        values.append(func.coalesce(data.c.kwh, 0).label('kWh'))
+        values.append(func.coalesce(data.c.kwh / 1000.0, 0).label('kWh'))
 
     return db.query(timeseries.c.date, *values).\
         outerjoin(data, data.c.date == timeseries.c.date).\
