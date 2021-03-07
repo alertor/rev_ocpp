@@ -10,6 +10,7 @@ class UserBase(BaseModel):
     email: EmailStr
     is_active: Optional[bool]
     is_staff: Optional[bool]
+    is_superuser: Optional[bool]
 
 
 # Properties required to create a new user
@@ -22,8 +23,8 @@ class UserUpdate(UserCreate):
     pass
 
 
-# Properties of a user in the database for admin view
-class UserData(UserBase):
+# Properties of a user in the database
+class User(UserBase):
     id: int
     last_login: Optional[datetime]
     date_joined: datetime
@@ -32,8 +33,8 @@ class UserData(UserBase):
         orm_mode = True
 
 
-class UserDataWithAuth(UserData):
-    hashed_password: str
+class UserWithAuth(User):
+    password: str
 
 
-__all__ = ["UserBase", "UserCreate", "UserUpdate", "UserData", "UserDataWithAuth"]
+__all__ = ['UserBase', "UserCreate", "UserUpdate", "User", "UserWithAuth"]

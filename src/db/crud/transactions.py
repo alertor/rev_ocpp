@@ -31,3 +31,6 @@ def get_transactions(
         )
 
     return query.all()
+
+
+__all__ = ['get_transactions']
