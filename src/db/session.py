@@ -4,8 +4,7 @@ from sqlalchemy.orm import sessionmaker, Session
 from .engine import db_engine
 
 # Configure the session factory
-SessionFactory = sessionmaker()
-SessionFactory.configure(bind=db_engine)
+SessionFactory = sessionmaker(autocommit=False, autoflush=False, bind=db_engine)
 
 
 @contextmanager

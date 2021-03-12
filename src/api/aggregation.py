@@ -6,7 +6,6 @@ from sqlalchemy.orm import Session
 from sqlalchemy.util import KeyedTuple
 
 import db.models as models
-import db.schemas as schemas
 
 from util import utc_datetime
 

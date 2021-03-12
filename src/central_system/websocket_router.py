@@ -1,12 +1,9 @@
 from fastapi import APIRouter, WebSocket
-from fastapi.exceptions import HTTPException
 from fastapi.websockets import WebSocketDisconnect
-
-from ocpp.v16 import call
 
 from db.mongo.log import log_connect
 from db.session import session
-from network.websocket_adaptor import FastAPIWebSocketAdaptor
+from network.websocket_adaptor import StarletteWebSocketAdaptor
 
 from chargepoint import VeefillChargePoint
 from chargepoint.exceptions import ChargePointNotAuthorized
@@ -19,7 +16,7 @@ router = APIRouter(
 )
 
 
-async def _handle_request(websocket: FastAPIWebSocketAdaptor, path):
+async def _handle_request(websocket: StarletteWebSocketAdaptor, path):
     """ For every new charge point that connects, create a ChargePoint
     instance and start listening for messages.
     """
@@ -56,6 +53,6 @@ async def connect_chargepoint(websocket: WebSocket, point_id: str) -> None:
         await websocket.close()
 
     # Apply the FastAPI (Starlette) websocket adaptor since ocpp library wants .recv and .send
-    _websocket_adaptor = FastAPIWebSocketAdaptor(websocket)
+    _websocket_adaptor = StarletteWebSocketAdaptor(websocket)
     await _handle_request(_websocket_adaptor, point_id)
     await websocket.close()

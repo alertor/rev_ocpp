@@ -29,7 +29,7 @@ from db.models import (
     Transaction,
 )
 
-from network.websocket_adaptor import FastAPIWebSocketAdaptor
+from network.websocket_adaptor import StarletteWebSocketAdaptor
 
 from .enums import UsageMode
 from .exceptions import ChargePointNotAuthorized
@@ -44,7 +44,7 @@ class CoreProfile(BaseChargePoint):
     def __init__(
             self,
             charge_point_id: str,
-            websocket: FastAPIWebSocketAdaptor,
+            websocket: StarletteWebSocketAdaptor,
             session: Session
     ):
         super(CoreProfile, self).__init__(charge_point_id, websocket)
