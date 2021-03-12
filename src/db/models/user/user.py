@@ -28,3 +28,4 @@ class User(Base):
         secondary=vehicle_users,
         back_populates='users'
     )
+    account = relationship('Account', back_populates='user')

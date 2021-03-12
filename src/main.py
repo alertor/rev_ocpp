@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 from api.router import router as data_api_router
@@ -7,8 +8,16 @@ from central_system.router import router as cs_router
 from central_system.websocket_router import router as ocpp_router
 from user.router import router as user_router
 
+from settings import ORIGINS
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ORIGINS,
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*']
+)
 
 # Data access endpoint
 app.include_router(

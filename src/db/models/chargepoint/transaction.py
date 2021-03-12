@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, Text
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, Text
 from sqlalchemy.dialects.postgresql import INTERVAL
 from sqlalchemy.orm import relationship
 
@@ -14,6 +14,7 @@ class Transaction(Base):
     meter_start = Column(Integer, nullable=False)
     meter_stop = Column(Integer, nullable=False)
     meter_used = Column(Integer, nullable=False)
+    cost_per_kwh = Column(Float, nullable=False)
     stop_reason = Column(Text)
     connector_id = Column(ForeignKey('connector.id'), nullable=True, index=True)
     end_token_id = Column(ForeignKey('token.id'), nullable=True, index=True)

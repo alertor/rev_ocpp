@@ -31,7 +31,7 @@ def hash_password(password) -> str:
 
 
 def authenticate_user(db: Session, *, email: str, password: str) -> Optional[models.User]:
-    user = users.get_one(db, email, get_password=True)
+    user = users.get_one(db, email)
     if not user:
         return None
     if not verify_password(password, user.password):
