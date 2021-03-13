@@ -5,8 +5,6 @@ from sqlalchemy.orm import Session
 from ..models import user as models
 from ..schemas import user as schemas
 
-from user.auth import hash_password
-
 
 def get_one(
         db: Session,
@@ -36,7 +34,7 @@ def create(
         first_name=user.first_name,
         last_name=user.last_name,
         email=user.email,
-        password=hash_password(user.password)
+        password=user.password
     )
     db.add(new_user)
     db.commit()

@@ -10,7 +10,7 @@ import db.models as models
 import db.schemas as schemas
 from db.session import get_db
 
-from .auth import authenticate_user, create_access_token, get_current_user
+from .auth import hash_password, authenticate_user, create_access_token, get_current_user
 
 
 router = APIRouter(
@@ -51,6 +51,8 @@ async def create_user(*, db: Session = Depends(get_db), new_user: schemas.UserCr
     if user:
         raise HTTPException(status_code=400, detail='A user with this email already exists')
 
+    # Hash the user's password
+    new_user.password = hash_password(new_user.password)
     user = users.create(db, user=new_user)
     return {
         'first_name': user.first_name,
